@@ -1,0 +1,41 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: docker_compose
+  author: NioniosFr
+  description: An ansible role to install docker-compose from GitHub Releases in a Linux x86_64 based system.
+  license: "license (MIT)"
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Fedora
+      versions:
+        - 27
+        - 28
+        - 29
+
+    - name: EL
+      versions:
+        - 7
+
+    - name: Ubuntu
+      versions:
+        - all
+
+    - name: Debian
+      versions:
+        - all
+
+  galaxy_tags:
+    - development
+    - system
+    - infrastructure
+    - orchestration
+    - automation
+    - docker
+    - compose
+    - clustering
+    - cloud
+    - container

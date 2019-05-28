@@ -1,0 +1,33 @@
+---
+- name: Fail early if we do not support the current environment
+  fail:
+        msg: "Only 'x86_64' architectures are supported for now."
+  when: ansible_architecture != 'x86_64'
+
+- name: Set fact for the sha256 of compose
+  set_fact:
+    docker_compose_shafile: "{{ lookup('url', docker_compose_sha256_url) }}"
+
+- name: Set fact for the sha256 checksum
+  set_fact:
+    docker_compose_sha256: "{{ docker_compose_shafile | regex_replace('^(?P<sha>\\w+).*$', '\\g<sha>') }}"
+
+- name: Fetch docker compose
+  get_url:
+        url: "{{ docker_compose_binary_url }}"
+        dest: "{{ docker_compose_path }}"
+        mode: 0755
+        owner: "{{ docker_compose_user }}"
+        group: "{{ docker_compose_group }}"
+        checksum: "sha256:{{ docker_compose_sha256 }}"
+
+- name: Add a profile.d PATH file for the binary
+  lineinfile:
+        path: /etc/profile.d/{{ docker_compose_cmd_name }}-path.sh
+        regexp: '^export\sPATH'
+        line: 'export PATH="{{ docker_compose_system_path_value }}"'
+        state: present
+        insertafter: EOF
+        create: yes
+        mode: 0644
+  when: docker_compose_configure_system_path
